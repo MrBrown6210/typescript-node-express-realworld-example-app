@@ -1,26 +1,28 @@
-import * as dotenv from "dotenv";
-import * as _ from "lodash";
-import * as path from "path";
+import dotenv from "dotenv";
+import path from "path";
 
 dotenv.config({ path: ".env" });
 
-export const ENVIRONMENT = _.defaultTo(process.env.APP_ENV, "dev");
+if (!process.env.JWT_SECRET) {
+  console.warn("JWT_SECRET env is missing!");
+}
+
+if (!process.env.SESSION_SECRET) {
+  console.warn("SESSION_SECRET env is missing!");
+}
+
+export const ENVIRONMENT = process.env.APP_ENV || "dev";
 export const IS_PRODUCTION = ENVIRONMENT === "production";
-export const APP_PORT = _.defaultTo(parseInt(process.env.APP_PORT), 3000);
-export const LOG_DIRECTORY = _.defaultTo(
-  process.env.LOG_DIRECTORY,
-  path.resolve("logs")
-);
-export const JWT_SECRET = _.defaultTo(process.env.JWT_SECRET, "secret");
-export const SESSION_SECRET = _.defaultTo(process.env.SESSION_SECRET, "secret");
+export const IS_TEST = ENVIRONMENT === "test";
+export const APP_PORT = parseInt(process.env.APP_PORT) || 3000;
+export const LOG_DIRECTORY = process.env.LOG_DIRECTORY || path.resolve("logs");
+export const JWT_SECRET = process.env.JWT_SECRET || "secret";
+export const SESSION_SECRET = process.env.SESSION_SECRET || "secret";
 export const DB = {
-  USER: _.defaultTo(process.env.DB_USER, "root"),
-  PASSWORD: _.defaultTo(process.env.DB_USER_PWD, "secret"),
-  HOST: _.defaultTo(process.env.DB_HOST, "localhost"),
-  NAME: _.defaultTo(process.env.DB_NAME, "conduit"),
-  PORT: _.defaultTo(parseInt(process.env.DB_PORT), 27017),
+  USER: process.env.DB_USER || "root",
+  PASSWORD: process.env.DB_USER_PWD || "secret",
+  HOST: process.env.DB_HOST || "localhost",
+  NAME: process.env.DB_NAME || "conduit",
+  PORT: parseInt(process.env.DB_PORT) || 27017,
 };
-export const DB_URI = _.defaultTo(
-  process.env.DB_URI,
-  "mongodb://localhost:27017/Mocks"
-);
+export const DB_URI = process.env.DB_URI || "mongodb://localhost:27017/Mocks";
